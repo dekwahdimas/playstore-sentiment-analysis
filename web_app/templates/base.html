@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Play Store Sentiment Analysis</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.bootstrap5.css">
+</head>
+<body>
+    <!-- Start navbar -->
+    {% include "navbar.html" %}
+    <!-- End navbar -->
+    <br>
+
+    <div class="container">
+        <!-- Start main content -->
+        {% block content %}
+        
+        {% endblock content %}
+        <!-- End main content -->
+
+    <!-- Start bootstrap js -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <!-- End bootstrap js -->
+
+    <!-- Start datatables js -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.1.5/js/dataTables.bootstrap5.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+          $('#dataTable').DataTable();
+        });
+    </script>
+    <!-- End datatables js -->
+
+</body>
+</html>

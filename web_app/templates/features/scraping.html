@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5 class="m-0 font-weight-bold text-center">{{ context['feature_title'] }}</h5>
+    </div>
+    <div class="card-body">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tortor velit, lacinia quis diam a, volutpat aliquet sem. Maecenas eget nulla a justo tristique vulputate. Quisque efficitur ipsum a lectus lobortis ultricies. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent volutpat metus nec eros luctus pulvinar. Cras laoreet elit ut cursus laoreet. Vivamus urna ante, finibus sit amet tellus sit amet, gravida vulputate augue. Suspendisse eget purus augue. Nulla luctus sit amet metus non suscipit.
+        </p>
+    </div>
+</div>
+
+<form method="POST" action="/scraping" class="user" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>App ID:</label>
+        <input type="text" id="app_id" name="app_id" required>
+        <br><br>
+        <label for="total_scrape">Total Review:</label>
+        <input type="number" id="total_scrape" name="total_scrape" min="200" required>
+        <br><br>
+        <label for="filter_score">Filter Score:</label>
+        <select id="filter_score" name="filter_score">
+            <option value="ALL">All</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <br><br>
+        <button type="submit" class="btn btn-primary">Scrape Reviews</button>
+    </div>
+</form>
+
+</div>
+{% endblock content %}

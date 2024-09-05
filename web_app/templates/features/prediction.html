@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5 class="m-0 font-weight-bold text-center">{{ context['feature_title'] }}</h5>
+    </div>
+    <div class="card-body">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tortor velit, lacinia quis diam a, volutpat aliquet sem. Maecenas eget nulla a justo tristique vulputate. Quisque efficitur ipsum a lectus lobortis ultricies. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent volutpat metus nec eros luctus pulvinar. Cras laoreet elit ut cursus laoreet. Vivamus urna ante, finibus sit amet tellus sit amet, gravida vulputate augue. Suspendisse eget purus augue. Nulla luctus sit amet metus non suscipit.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="mb-3 col-auto">
+        <input class="form-control" type="file" id="formFile">
+    </div>
+    <div class="mb-3 col-auto">
+        <button type="button" class="btn btn-primary">Submit</button>
+    </div>
+</div>
+
+<table id="dataTable" class="table table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Age</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Cedric Kelly</td>
+            <td>Senior Javascript Developer</td>
+            <td>Edinburgh</td>
+            <td>22</td>
+            <td>2012-03-29</td>
+            <td>$433,060</td>
+        </tr>
+        <tr>
+            <td>Airi Satou</td>
+            <td>Accountant</td>
+            <td>Tokyo</td>
+            <td>33</td>
+            <td>2008-11-28</td>
+            <td>$162,700</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+{% endblock content %}
