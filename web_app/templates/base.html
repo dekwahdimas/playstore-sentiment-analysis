@@ -32,9 +32,10 @@
     <script type="text/javascript" src="https://cdn.datatables.net/2.1.5/js/dataTables.bootstrap5.js"></script>
     
     <script>
-        $(document).ready(function () {
-          $('#dataTable').DataTable();
-        });
+    new DataTable('#dataTable', {
+        scrollX: true,
+        scrollY: 400
+    });
     </script>
     <!-- End datatables js -->
 
