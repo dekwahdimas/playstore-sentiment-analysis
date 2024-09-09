@@ -13,44 +13,63 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="mb-3 col-auto">
-        <input class="form-control" type="file" id="formFile">
+<form method="POST" enctype=multipart/form-data>
+    <div class="row">
+        <div class="mb-3 col-auto">
+            <input class="form-control" type="file" name="file" id="formFile">
+        </div>
+        <div class="row">
+            <div class="mb-3 col-auto">
+                <label for="chosen_model">Choose a Model:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chosen_model" id="chosen_model" value="svm" required>
+                    <label class="form-check-label" for="chosen_model">
+                        Support Vector Machine
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chosen_model" id="chosen_model" value="knn" required>
+                    <label class="form-check-label" for="chosen_model">
+                        K-Nearest Neighbor
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chosen_model" id="chosen_model" value="nb" required>
+                    <label class="form-check-label" for=chosen_model">
+                        Naive Bayes
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 col-auto">
+            <button type="submit" value="Upload" class="btn btn-primary">Submit</button>
+        </div>
     </div>
-    <div class="mb-3 col-auto">
-        <button type="button" class="btn btn-primary">Submit</button>
+</form>
+
+{% if context["classification_report"] %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow md-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold text-center">Classification Report</h5>
+            </div>
+            <div class="card-body">
+                <pre class="text-center">{{ context["classification_report"] | safe }}</pre>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card shadow md-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold text-center">Confusion Matrix</h5>
+            </div>
+            <div class="card-body">
+                <pre class="text-center">{{ context["confusion_matrix"] | safe }}</pre>
+            </div>
+        </div>
     </div>
 </div>
-
-<table id="dataTable" class="table table-bordered" style="width:100%">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
-            <th>Start date</th>
-            <th>Salary</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Cedric Kelly</td>
-            <td>Senior Javascript Developer</td>
-            <td>Edinburgh</td>
-            <td>22</td>
-            <td>2012-03-29</td>
-            <td>$433,060</td>
-        </tr>
-        <tr>
-            <td>Airi Satou</td>
-            <td>Accountant</td>
-            <td>Tokyo</td>
-            <td>33</td>
-            <td>2008-11-28</td>
-            <td>$162,700</td>
-        </tr>
-    </tbody>
-</table>
+{% endif %}
 
 {% endblock content %}

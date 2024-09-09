@@ -8,6 +8,7 @@ import pytz
 from .scripts.scraping_reviews import scrape_reviews
 from .scripts.eda import explore_data
 from .scripts.pre_processing import do_pre_processing
+from .scripts.modeling_evaluation import modeling_and_evaluation
 
 views = Blueprint('views', __name__)
 
@@ -96,13 +97,23 @@ def preprocessing():
     return render_template("features/pre-processing.html", context={'feature_title': feature_title})
 
 
-@views.route('/modeling-evaluation')
+@views.route('/modeling-evaluation', methods=['GET', 'POST'])
 def modeling_evaluation():
     feature_title = 'Modeling & Evaluation'
-    context = {
-        'feature_title': feature_title,
-    }
-    return render_template("features/modeling-evaluation.html", context=context)
+    if request.method == 'POST':
+        filepath = upload_file()
+        chosen_model = request.form['chosen_model']
+        cr, cm = modeling_and_evaluation(filepath, chosen_model)
+
+        context = {
+            'feature_title': feature_title,
+            'classification_report': cr,
+            'confusion_matrix': cm,
+        }
+        
+        return render_template("features/modeling-evaluation.html", context=context)
+    
+    return render_template("features/modeling-evaluation.html", context={'feature_title': feature_title})
 
 
 @views.route('/prediction')
