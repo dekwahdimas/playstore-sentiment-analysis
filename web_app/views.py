@@ -54,7 +54,13 @@ def eda():
     feature_title = 'Exploratory Data Analysis'
     if request.method == 'POST':
         filepath = upload_file()
-        headers, data = explore_data(filepath)
+        df, headers, data = explore_data(filepath)
+
+        # Create the uploads folder if it doesn't exist
+        if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
+            os.makedirs(current_app.config['UPLOAD_FOLDER'])
+
+        df.to_csv(os.path.join(current_app.config['UPLOAD_FOLDER'], f'EDA_{filepath.split("_")[1]}.csv'), index=False)
 
         context = {
             'feature_title': feature_title,

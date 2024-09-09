@@ -10,7 +10,7 @@ def explore_data(filepath):
     
     # Hard labeled the dataset 
     # (temporary, will be move to new feature later)
-    df["label"] = df["score"].map({
+    df["hard_label"] = df["score"].map({
         1: 0, # 0: negative
         2: 0, # 0: negative
         3: 1, # 1: neutral
@@ -24,4 +24,4 @@ def explore_data(filepath):
     headers = df.columns.tolist()
     data = df.values.tolist()
     
-    return headers, data
+    return df, headers, data
