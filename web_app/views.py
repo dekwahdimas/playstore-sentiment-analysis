@@ -7,6 +7,7 @@ import pytz
 
 from .scripts.scraping_reviews import scrape_reviews
 from .scripts.eda import explore_data
+from .scripts.pre_processing import do_pre_processing
 
 views = Blueprint('views', __name__)
 
@@ -72,13 +73,27 @@ def eda():
     return render_template("features/eda.html", context={'feature_title': feature_title})
 
 
-@views.route('/pre-processing')
+@views.route('/pre-processing', methods=['GET', 'POST'])
 def preprocessing():
     feature_title = 'Data Pre-Processing'
-    context = {
-        'feature_title': feature_title,
-    }
-    return render_template("features/pre-processing.html", context=context)
+    if request.method == 'POST':
+        filepath = upload_file()
+        df, headers, data = do_pre_processing(filepath)
+
+        # Create the uploads folder if it doesn't exist
+        if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
+            os.makedirs(current_app.config['UPLOAD_FOLDER'])
+
+        df.to_csv(os.path.join(current_app.config['UPLOAD_FOLDER'], f'pre-processed_{filepath.split("_")[1]}.csv'), index=False)
+
+        context = {
+            'feature_title': feature_title,
+            'headers': headers,
+            'data': data,
+        }
+        return render_template("features/pre-processing.html", context=context)
+    
+    return render_template("features/pre-processing.html", context={'feature_title': feature_title})
 
 
 @views.route('/modeling-evaluation')
