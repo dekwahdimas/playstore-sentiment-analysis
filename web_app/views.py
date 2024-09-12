@@ -11,10 +11,12 @@ from .scripts.scraping_reviews import scrape_reviews
 from .scripts.eda import explore_data
 from .scripts.pre_processing import do_pre_processing
 from .scripts.modeling_evaluation import modeling_and_evaluation
+from .scripts.prediction import do_prediction
 
 views = Blueprint('views', __name__)
 
-ALLOWED_EXTENSIONS = {'csv', 'xlsx'}
+ALLOWED_EXTENSIONS_SPREADSHEET = {'csv', 'xlsx'}
+ALLOWED_EXTENSIONS_PICKLE = {'pkl', 'pickle'}
 
 @views.route('/')
 def home():
@@ -120,38 +122,67 @@ def modeling_evaluation():
     
     return render_template("features/modeling-evaluation.html", context={'feature_title': feature_title})
 
+
 @views.route('/download_model')
 def download_model():
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], 'model_pipeline.pkl')
 
-@views.route('/prediction')
+
+@views.route('/prediction', methods=['GET', 'POST'])
 def prediction():
     feature_title = 'Data Prediction'
-    context = {
-        'feature_title': feature_title,
-    }
-    return render_template("features/prediction.html", context=context)
+    if request.method == 'POST':
+        filepath = upload_file() # for spreadsheet
+        pickle_file = upload_file('pickle_file', 'pickle') # for pickle file
+        loaded_pickle = joblib.load(pickle_file)
+
+        # Pre-process dataset before doing prediction
+        df, headers, data = do_pre_processing(filepath)
+        pred_df, pred_headers, pred_data = do_prediction(df, loaded_pickle)
+
+        # Create the uploads folder if it doesn't exist
+        if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
+            os.makedirs(current_app.config['UPLOAD_FOLDER'])
+
+        pred_df.to_csv(os.path.join(current_app.config['UPLOAD_FOLDER'], f'predicted_{filepath.split("_")[1]}.csv'), index=False)
+
+        context = {
+            'feature_title': feature_title,
+            'headers': pred_headers,
+            'data': pred_data,
+        }
+        return render_template("features/prediction.html", context=context)
+    return render_template("features/prediction.html", context={'feature_title': feature_title})
 
 
 # -------------------------Functions
 # Check allowed file to be uploaded
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowed_file(filename, allowed_extensions):
+    if allowed_extensions == 'spreadsheet':
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_SPREADSHEET
+    elif allowed_extensions == 'pickle':
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_PICKLE
 
 # Receive uploaded file from user
-def upload_file():
+# file_key ('file') and ext ('spreadsheet') default parameter
+# is because most features receive spreadsheet as file, 
+# not pickle, nor other type of files
+def upload_file(file_key='file', ext='spreadsheet'):
     # Check if the post request has the file part
-    if 'file' not in request.files:
+    if file_key not in request.files:
         # flash('No file part')
         return redirect(request.url)
-    file = request.files['file']
+    file = request.files[file_key]
     # If the user does not select a file, the browser submits an
     # empty file without a filename.
     if file.filename == '':
         # flash('No selected file')
         return redirect(request.url)
-    if file and allowed_file(file.filename):
+    if file and allowed_file(file.filename, ext):
         filename = secure_filename(file.filename)
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-    return filepath
+        return filepath
+    else:
+        # flash('File type not allowed')
+        return redirect(request.url)
