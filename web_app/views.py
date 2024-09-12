@@ -1,8 +1,10 @@
 import os
 from datetime import datetime
+import joblib
 
 from flask import Blueprint, request, current_app, render_template, redirect, send_from_directory, url_for
 from werkzeug.utils import secure_filename
+from werkzeug.security import safe_join
 import pytz
 
 from .scripts.scraping_reviews import scrape_reviews
@@ -103,7 +105,10 @@ def modeling_evaluation():
     if request.method == 'POST':
         filepath = upload_file()
         chosen_model = request.form['chosen_model']
-        cr, cm = modeling_and_evaluation(filepath, chosen_model)
+        pipeline, cr, cm = modeling_and_evaluation(filepath, chosen_model)
+        joblib.dump(pipeline, os.path.join(current_app.config['UPLOAD_FOLDER'], 'model_pipeline.pkl'))
+        # safe_path = safe_join(os.path.join(current_app.config['UPLOAD_FOLDER'], 'pickle'))
+        # joblib.dump(pipeline, safe_path, 'model_pipeline.pkl')
 
         context = {
             'feature_title': feature_title,
@@ -115,6 +120,9 @@ def modeling_evaluation():
     
     return render_template("features/modeling-evaluation.html", context={'feature_title': feature_title})
 
+@views.route('/download_model')
+def download_model():
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], 'model_pipeline.pkl')
 
 @views.route('/prediction')
 def prediction():
